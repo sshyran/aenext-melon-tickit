@@ -1,0 +1,80 @@
+Melon Tickit
+
+Future features:
+    *Auto detect internet connect type => for trailer quality
+    *Auto ask user and allow option for user to change to silent mode after ticket scanned
+    *Auto remind user to rate watched movies
+    *Auto remind user when new movie come (optional)=> When user waiting system to processing the ticket => Display ads movie;
+    *Ads new AENEXT product by notifiying user
+    *Get basic weather info when user pick on showtimes
+    *AENEXT movies ratings base on location.
+    *Add movie search by cast       
+    *Add watch list, auto notify  cheapest hour or location for some selected movies.
+    *Add rating text movie detail
+    *Add movie search feature + local filtering                    
+    *Movie Details allow user to swipe to the next movie and swipe back.
+    *Auto turn brightness to maximum when display barcode.               
+    *Add request benchmark table
+    *Auto remove unuse images.               
+	*Allow change date on MovieList
+	*Allow rate each movie, by holding press on the movie in movie list.
+	*Add weather for each movie, date
+
+	*When movies fetch in process, if cancelled or failed => return to origin page 
+	*Allow user to rate movie
+	*Add critic ratings
+	*Add youtube trailer
+	*Add feedback activity
+	*Add back button on Movie Detail	
+
+
+
+*1.0.2
+
+	*(FIXED) Locate me in Movie Detail failed
+	*(FIXED) Remove all log data
+	*(Done) Add future show time to 7 day ahead
+	*(FIXED) Enter zipcode manually doesn't transfer zipcode data to STARTER	
+
+	Bug fixes:
+		
+		*Bugs from mail:
+			1. 	(FIXED) java.lang.NullPointerException
+				tickit.cinema.AenextUtilityLib.getHTTPCachedImage(AenextUtilityLib.java:69)
+				tickit.cinema.TickitCinemaMovieDetail.onCreate(TickitCinemaMovieDetail.java:126)
+				
+				
+			2. 	(FIXED) java.io.FileNotFoundException: http://aenext.dyndns.info:2080/tickit_cinema_requests/request_movie_list?location=60409,Calumet City,Illinois,United States&date_offset=0
+				tickit.cinema.AenextHTTPLib.http_request(AenextHTTPLib.java:31)
+				
+			3. 	(FIXED) java.lang.ArrayIndexOutOfBoundsException
+				tickit.cinema.libTickitCinemaMemcached.cache_theater_detail(libTickitCinemaMemcached.java:226)
+				
+			4.	(FIXED) org.xml.sax.SAXParseException: Unexpected end of document
+				tickit.cinema.AenextHTTPLib.http_request(AenextHTTPLib.java:31)
+				
+			5.	(FIXED) java.lang.NullPointerException
+				tickit.cinema.libTickitCinemaMemcached.cache_theater_detail(libTickitCinemaMemcached.java:197)
+			
+			6.	(FIXED) java.lang.NullPointerException
+				tickit.cinema.TickitCinemaMovieList$SlowAdapter.getView(TickitCinemaMovieList.java:310)
+				
+			7.	(FIXED) java.lang.NullPointerException
+				tickit.cinema.TickitCinemaStarter.onActivityResult(TickitCinemaStarter.java:183)
+				
+			8.	(FIXED) java.lang.ArrayIndexOutOfBoundsException
+				tickit.cinema.libTickitCinemaMemcached.cache_theater_detail(libTickitCinemaMemcached.java:223)
+				
+			9.	(FIXED) Movie "My Sister's Keeper" missing mid
+	
+*1.0.1 Stable
+
+	*(Done) Redesign data transfer => take advantage of multi-thread.
+	*(Done) Redesign Showtime display for more quicker scrolling.
+			
+	
+*1.0.0 Beta
+	*DEFECT: (Done) Coming up show time messed up
+	*DEFECT: (Done) When click "My Location" => should use GPS instead of get direct location from MovieList
+	*RFE: (Done) Change icon/logo to Melon Ticket
+	*RFE: (Done) Polish icons
