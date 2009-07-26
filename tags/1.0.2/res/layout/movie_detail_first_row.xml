@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_height="150px" android:layout_width="fill_parent">
+    	<ImageView		
+    	android:id="@+id/movie_image"
+        android:layout_height="140px"
+        android:layout_weight="0"
+        android:layout_width="100px" 
+        android:layout_marginLeft="5px" 
+        android:layout_marginRight="5px" 
+        android:layout_marginTop="5px" 
+        android:layout_gravity="top|left"/>
+        
+		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="170px">
+    
+	    	<TextView  
+			android:id ="@+id/name"
+	   		android:text="title" 
+	   		android:layout_width="fill_parent" 
+	   		android:layout_margin="2px" 	   		
+	        android:typeface="normal" 
+	        android:textStyle="bold"
+    	    android:textSize="20px"	   		 
+	   		android:layout_height="50px"
+	   		android:textColor="#FFF"/>
+	   		<TextView  
+			android:id ="@+id/duration_standard_rating"
+	   		android:text="standard_rating" 
+	   		android:layout_width="fill_parent" 
+	   		android:layout_margin="2px" 
+	   		android:textStyle="bold" 
+	   		android:layout_height="20px"/>
+	   		<TextView  
+			android:id ="@+id/genres"
+	   		android:text="genres" 
+	   		android:layout_width="fill_parent" 
+	   		android:layout_margin="2px" 
+	   		android:textStyle="bold" 
+	   		android:layout_height="20px"/>
+	   		<TextView  
+			android:id ="@+id/release_date"
+	   		android:text="release_date" 
+	   		android:layout_width="fill_parent" 
+	   		android:layout_margin="2px" 
+	   		android:textStyle="bold" 
+	   		android:layout_height="20px"/>
+
+         	<RatingBar 
+     		android:id="@+id/imdb_rating"
+            style="?android:attr/ratingBarStyleSmall"            
+            android:layout_height="15px" 
+            android:isIndicator="true" 
+            android:layout_gravity="bottom" 
+            android:layout_width="wrap_content" 
+            android:stepSize="0.1" 
+            android:numStars="5" android:layout_weight="1" android:layout_margin="10dip"/>        
+	    </LinearLayout>
+	</LinearLayout>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="fill_parent">
+	   	<TextView  
+		android:id ="@+id/plot"
+	   	android:text="Set in 1964, Doubt centers on a nun who confronts a priest after suspecting him of abusing a black student. He denies the charges, and much of the play's quick-fire dialogue tackles themes of religion, morality, and authority." 
+	   	android:layout_width="fill_parent" 
+	   	android:layout_margin="5px" 
+	   	android:textStyle="italic" 
+	   	android:layout_height="fill_parent"/>
+	</LinearLayout>
+</LinearLayout>
+

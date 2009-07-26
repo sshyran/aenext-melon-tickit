@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"	
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal">
+    <ImageButton		
+    		android:id="@+id/theater_map"
+	        android:layout_height="wrap_content"
+        	android:layout_width="wrap_content" 	        
+    	    android:layout_weight="0"
+	        android:layout_gravity="top|left"
+    	    android:gravity="center_vertical"
+    	        	    
+	/>
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"	
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">	
+		<TextView
+			android:id="@+id/theater_name"
+			android:text="Loading..."
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingTop="10px"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+		/>
+		<TextView
+			android:id="@+id/showtimes"
+			android:text=""
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="5px"
+			android:textSize="15sp"
+			android:textStyle="bold"			
+		/>
+
+	</LinearLayout>		
+</LinearLayout>
