@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -132,6 +133,13 @@ public class TickitCinemaMovieDetail extends ListActivity
 			mid					=	bundle.getString("Movie_mid");			
 			genres				=	bundle.getString("Movie_genre");
 			current_location	=	bundle.getString("Movie_current_location");
+			
+			/*Bitmap abc;
+			int[] i;
+			
+			abc=BitmapFactory.decodeResource(this.getResources(), R.drawable.no_image);
+			abc.getPixels(i, 0, 25, 0, 0, 25, 25);
+			image.setPixels(i, 0, 25, 0, 0, 25, 25);*/
 			
 			memDB= new libTickitCinemaMemcached();
 			//Display title with current location
@@ -272,7 +280,7 @@ public class TickitCinemaMovieDetail extends ListActivity
         public Object getItem(int position) {return position;}
         public long getItemId(int position) {return position;}
         //------------------------------------------------------------------------------------------ getView       
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
         	try {
         		ViewHolder holder;            
         		if (position==0){//Render Movie Detail Item            	        			
@@ -289,6 +297,14 @@ public class TickitCinemaMovieDetail extends ListActivity
             	
         			holder.title.setText(name);
         			holder.image.setImageBitmap(image); 
+        			holder.image.setOnClickListener(
+    					new Button.OnClickListener() { 
+    						public void onClick(View v) {    								
+    							startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(memDB.movies.get(position).trailer_url))); 
+    						}
+    					}
+        			);
+        			
         			holder.duration_standard_rating.setText(duration+" | "+standard_rating);                
         			holder.plot.setText(plot);                
         			//Release date
@@ -322,6 +338,7 @@ public class TickitCinemaMovieDetail extends ListActivity
     						new Button.OnClickListener() { 
     							public void onClick(View v) {
     								startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q="+memDB.theaters.get(v.getId()-1).address)));
+    								//startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.youtube.com/watch?v=hr32TzpOA9k"))); 
     							}
     						}
             			);

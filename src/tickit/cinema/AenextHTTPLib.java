@@ -7,7 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
+//import android.util.Log;
 
 public class AenextHTTPLib {
 	public final static String ROOT_URI="http://aenext.dyndns.info:2081";
