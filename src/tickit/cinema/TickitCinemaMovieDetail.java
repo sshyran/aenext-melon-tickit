@@ -52,7 +52,7 @@ public class TickitCinemaMovieDetail extends ListActivity
 	private static Bitmap 	image;
 	private static String	duration;
 	private static String	standard_rating;
-	//private static String	trailer_url;
+	private static String	trailer_url;
 	private static long		release_date;
 	private static String	plot;
 	private static Float	imdb_rating;
@@ -122,24 +122,20 @@ public class TickitCinemaMovieDetail extends ListActivity
 			Bundle bundle = this.getIntent().getExtras();
 			//Save movie's properties data for reuse in slow adapter		
 			
-			name				=	bundle.getString("Movie_name");			
-			image				=	AenextUtilityLib.requestHTTPImageWithCached(handler,this,bundle.getString("Movie_image_url"));
+			current_location	=	bundle.getString("Movie_current_location");
+			name				=	bundle.getString("Movie_name");
+			trailer_url			=	bundle.getString("Movie_trailer_url");
+			image				=	AenextUtilityLib.playable_image_marker(handler,this,AenextUtilityLib.requestHTTPImageWithCached(handler,this,bundle.getString("Movie_image_url")),trailer_url);
 			duration			=	bundle.getString("Movie_duration");
 			standard_rating		=	bundle.getString("Movie_standard_rating");
-			//trailer_url			=	bundle.getString("Movie_trailer_url");
+			
 			release_date		=	bundle.getLong("Movie_release_date");
 			plot				=	bundle.getString("Movie_movie_plot");
 			imdb_rating			=	bundle.getFloat("Movie_imdb_rating");
 			mid					=	bundle.getString("Movie_mid");			
 			genres				=	bundle.getString("Movie_genre");
-			current_location	=	bundle.getString("Movie_current_location");
 			
-			/*Bitmap abc;
-			int[] i;
 			
-			abc=BitmapFactory.decodeResource(this.getResources(), R.drawable.no_image);
-			abc.getPixels(i, 0, 25, 0, 0, 25, 25);
-			image.setPixels(i, 0, 25, 0, 0, 25, 25);*/
 			
 			memDB= new libTickitCinemaMemcached();
 			//Display title with current location
@@ -296,15 +292,16 @@ public class TickitCinemaMovieDetail extends ListActivity
         			convertView.setTag(holder);
             	
         			holder.title.setText(name);
-        			holder.image.setImageBitmap(image); 
-        			holder.image.setOnClickListener(
-    					new Button.OnClickListener() { 
-    						public void onClick(View v) {    								
-    							startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(memDB.movies.get(position).trailer_url))); 
+        			holder.image.setImageBitmap(image);
+        			if ((trailer_url!=null)&&!trailer_url.equals("")){
+        				holder.image.setOnClickListener(
+        						new Button.OnClickListener() { 
+    							public void onClick(View v) {    								
+    								startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(trailer_url))); 
+    							}
     						}
-    					}
-        			);
-        			
+        				);
+        			}        			
         			holder.duration_standard_rating.setText(duration+" | "+standard_rating);                
         			holder.plot.setText(plot);                
         			//Release date
@@ -337,8 +334,7 @@ public class TickitCinemaMovieDetail extends ListActivity
             			holder.map.setOnClickListener(
     						new Button.OnClickListener() { 
     							public void onClick(View v) {
-    								startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q="+memDB.theaters.get(v.getId()-1).address)));
-    								//startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.youtube.com/watch?v=hr32TzpOA9k"))); 
+    								startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q="+memDB.theaters.get(v.getId()-1).address))); 
     							}
     						}
             			);
