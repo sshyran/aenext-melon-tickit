@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 //import android.util.Log;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -284,7 +286,7 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
         public int getCount() {return memDB.movies.size();}
         public Object getItem(int position) {return position;}
         public long getItemId(int position) {return position;}
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
         	try {
         		ViewHolder holder = new ViewHolder();            
         		if (convertView == null) {
@@ -327,7 +329,15 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
         				}        				        				
         			}
         			
-        			/////////////////////////////////////////// COVER IMAGE 
+        			/////////////////////////////////////////// COVER IMAGE
+        			holder.movie_image.setOnClickListener(
+        					new Button.OnClickListener() { 
+        						public void onClick(View v) {    								
+        							startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(memDB.movies.get(position).trailer_url))); 
+        						}
+        					}
+            			);
+        			
         			holder.movie_image.setImageDrawable(new BitmapDrawable(memDB.movies.get(position).image_bmp));
         			        			
         			//Imdb rating
