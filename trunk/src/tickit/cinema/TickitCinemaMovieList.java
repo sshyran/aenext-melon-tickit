@@ -279,9 +279,11 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////// CLASS SlowAdapter
     private class SlowAdapter extends BaseAdapter {
         private LayoutInflater mInflater;
+        private Context ctx;
         
         public SlowAdapter(Context context) {
         	mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        	ctx = context;
         }
         public int getCount() {return memDB.movies.size();}
         public Object getItem(int position) {return position;}
@@ -329,16 +331,21 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
         				}        				        				
         			}
         			
-        			/////////////////////////////////////////// COVER IMAGE
-        			holder.movie_image.setOnClickListener(
+        			/////////////////////////////////////////// COVER IMAGE        			
+        			if ((memDB.movies.get(position).trailer_url!=null)&&(!memDB.movies.get(position).trailer_url.equals(""))){
+        				holder.movie_image.setOnClickListener(
         					new Button.OnClickListener() { 
         						public void onClick(View v) {    								
         							startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(memDB.movies.get(position).trailer_url))); 
         						}
         					}
             			);
-        			
-        			holder.movie_image.setImageDrawable(new BitmapDrawable(memDB.movies.get(position).image_bmp));
+        			}
+        			if (memDB.movies.get(position).image_bmp!=null){
+        				holder.movie_image.setImageDrawable(new BitmapDrawable(AenextUtilityLib.playable_image_marker(handler,ctx,memDB.movies.get(position).image_bmp,memDB.movies.get(position).trailer_url)));
+        			}else{
+        				holder.movie_image.setImageDrawable(new BitmapDrawable(memDB.movies.get(position).image_bmp));
+        			}
         			        			
         			//Imdb rating
         			if(memDB.movies.get(position).movie_imdb_rating==-1.0){

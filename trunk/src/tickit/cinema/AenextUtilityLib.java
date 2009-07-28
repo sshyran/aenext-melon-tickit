@@ -12,7 +12,11 @@ import org.w3c.dom.Document;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 //import android.util.Log;
 
@@ -59,7 +63,7 @@ public class AenextUtilityLib {
 		}
 	}
 	//###################################################################################################################### getHTTPCachedImage
-	public static Bitmap getHTTPCachedImage(Handler handler, Context ctx, String image_url)
+	/*public static Bitmap getHTTPCachedImage(Handler handler, Context ctx, String image_url)
 	{		
 		try {
 			BitmapDrawable bmp_image;
@@ -75,7 +79,7 @@ public class AenextUtilityLib {
 			return null;
 		}				
 		
-	}	
+	}	*/
 	//###################################################################################################################### requestHTTPImageWithCached
 	public static Bitmap requestHTTPImageWithCached(Handler handler, Context ctx, String image_url){
         try {
@@ -133,6 +137,21 @@ public class AenextUtilityLib {
 			return null;
 		}
 	} 
+	//###################################################################################################################### playable_image_marker
+	public static Bitmap playable_image_marker(Handler handler, Context ctx,Bitmap source_image,String trailer_url){
+		Bitmap CopySourceImage=source_image.copy(Bitmap.Config.ARGB_8888, true);		
+		if ((trailer_url!=null)&&!trailer_url.equals("")){
+			float x = source_image.getWidth();
+			float y = source_image.getHeight();
+			Canvas c = new Canvas(CopySourceImage);
+			Paint p = new Paint();        
+			p.setAntiAlias(true);
+			//p.setAlpha(235);              
+			c.drawBitmap(BitmapFactory.decodeResource(ctx.getResources(),android.R.drawable.ic_media_play), x-32, y-32, p);
+		}
+		return CopySourceImage;
+	}
+	
 	//###################################################################################################################### END
 }
 
