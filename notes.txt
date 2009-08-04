@@ -23,12 +23,15 @@ Future features:
 	*When movies fetch in process, if cancelled or failed => return to origin page 
 	*Allow user to rate movie
 	*Add critic ratings
-	*Add youtube trailer
 	*Add feedback activity
 	*Add back button on Movie Detail	
 
 
-
+*1.0.3
+	(Done) Add youtube trailer
+	Add new field call ignore_trailer, if it is 1 skip trailer
+	Change the play sign to be insert at the beginning of movie list => faster
+	
 *1.0.2
 
 	*(FIXED) Locate me in Movie Detail failed
