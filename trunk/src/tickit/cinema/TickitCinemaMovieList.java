@@ -342,7 +342,7 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
             			);
         			}
         			if (memDB.movies.get(position).image_bmp!=null){
-        				holder.movie_image.setImageDrawable(new BitmapDrawable(AenextUtilityLib.playable_image_marker(handler,ctx,memDB.movies.get(position).image_bmp,memDB.movies.get(position).trailer_url)));
+        				//holder.movie_image.setImageDrawable(new BitmapDrawable(AenextUtilityLib.playable_image_marker(handler,ctx,memDB.movies.get(position).image_bmp,memDB.movies.get(position).trailer_url)));
         			}else{
         				holder.movie_image.setImageDrawable(new BitmapDrawable(memDB.movies.get(position).image_bmp));
         			}
