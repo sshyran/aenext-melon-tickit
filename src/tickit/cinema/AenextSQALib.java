@@ -31,6 +31,7 @@ public class AenextSQALib
     
     public static void report_error(Handler handler, Context ctx,int aenext_error_code,String extra_data,Exception e){
     	try {
+    		e.printStackTrace();
     		if (aenext_error_code!=AERR_Handler){
     			Message m = new Message();		
     			m.what = aenext_error_code;    	

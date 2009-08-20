@@ -1,5 +1,6 @@
 package tickit.cinema;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -62,24 +63,6 @@ public class AenextUtilityLib {
 			default: return null;
 		}
 	}
-	//###################################################################################################################### getHTTPCachedImage
-	/*public static Bitmap getHTTPCachedImage(Handler handler, Context ctx, String image_url)
-	{		
-		try {
-			BitmapDrawable bmp_image;
-			if ((image_url!="")&&(image_url!=null)&&!(image_url.equals("null"))&&(image_url.length()!=0)){
-				//Log.d("Utility","Get image from local:"+FILE_CACHED_PATH + URLEncoder.encode(image_url, "UTF-8")+".png");
-				bmp_image = (BitmapDrawable) BitmapDrawable.createFromPath(FILE_CACHED_PATH + URLEncoder.encode(image_url, "UTF-8")+".png");
-				return bmp_image.getBitmap();
-			}else{
-				return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image);
-			}
-		} catch (Exception e) {
-			AenextSQALib.report_error(handler, ctx, AenextSQALib.AERR_AenextUtilityLib_getHTTPCachedImage,image_url, e);
-			return null;
-		}				
-		
-	}	*/
 	//###################################################################################################################### requestHTTPImageWithCached
 	public static Bitmap requestHTTPImageWithCached(Handler handler, Context ctx, String image_url){
         try {
@@ -98,8 +81,10 @@ public class AenextUtilityLib {
         			bmp_data = BitmapFactory.decodeStream(stream);
     	        
         			//Output it to file system
+
         			FileOutputStream fOut = ctx.openFileOutput(URLEncoder.encode(image_url, "UTF-8")+".png", Context.MODE_PRIVATE);
-        			bmp_data.compress(Bitmap.CompressFormat.PNG, 50, fOut);
+        			bmp_data.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+        			
         			fOut.flush();
         			fOut.close();
         		}else{
@@ -107,6 +92,28 @@ public class AenextUtilityLib {
         			bmp_data=bmp_data_drawable.getBitmap();
         		}
     			return bmp_data;					        		
+        	}
+        	return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image);
+		} catch (Exception e) {
+			AenextSQALib.report_error(handler, ctx, AenextSQALib.AERR_AenextUtilityLib_requestHTTPImageWithCached,image_url, e);
+			return null;
+		}
+	}
+	//###################################################################################################################### requestImageFromCached
+	public static Bitmap requestImageFromCached(Handler handler, Context ctx, String image_url){
+        try {
+        	if ((image_url!="")&&(image_url!=null)&&!(image_url.equals("null"))&&(image_url.length()!=0)){
+        		Bitmap bmp_data;        		
+        		//Check if it is local     
+        		
+        		BitmapDrawable bmp_data_drawable = (BitmapDrawable) BitmapDrawable.createFromPath(FILE_CACHED_PATH + URLEncoder.encode(image_url, "UTF-8")+".png");        		        		
+        		if (bmp_data_drawable==null){
+        			return null;
+        		}else{
+        			//Log.d("Utility","Get image from local:"+FILE_CACHED_PATH + URLEncoder.encode(image_url, "UTF-8")+".png");
+        			bmp_data=bmp_data_drawable.getBitmap();
+        			return bmp_data;
+        		}    								        		
         	}
         	return BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image);
 		} catch (Exception e) {
@@ -139,17 +146,21 @@ public class AenextUtilityLib {
 	} 
 	//###################################################################################################################### playable_image_marker
 	public static Bitmap playable_image_marker(Handler handler, Context ctx,Bitmap source_image,String trailer_url){
-		Bitmap CopySourceImage=source_image.copy(Bitmap.Config.ARGB_8888, true);		
-		if ((trailer_url!=null)&&!trailer_url.equals("")){
-			float x = source_image.getWidth();
-			float y = source_image.getHeight();
-			Canvas c = new Canvas(CopySourceImage);
-			Paint p = new Paint();        
-			p.setAntiAlias(true);
-			//p.setAlpha(235);              
-			c.drawBitmap(BitmapFactory.decodeResource(ctx.getResources(),android.R.drawable.ic_media_play), x-32, y-32, p);
+		if (source_image!=null){
+			Bitmap CopySourceImage=source_image.copy(Bitmap.Config.ARGB_8888, true);		
+			if ((trailer_url!=null)&&!trailer_url.equals("")){
+				float x = source_image.getWidth();
+				float y = source_image.getHeight();
+				Canvas c = new Canvas(CopySourceImage);
+				Paint p = new Paint();        
+				p.setAntiAlias(true);
+				//p.setAlpha(235);              
+				c.drawBitmap(BitmapFactory.decodeResource(ctx.getResources(),android.R.drawable.ic_media_play), x-32, y-32, p);
+			}		
+			return CopySourceImage;
+		}else{
+			return null;
 		}
-		return CopySourceImage;
 	}
 	
 	//###################################################################################################################### END

@@ -25,12 +25,25 @@ Future features:
 	*Add critic ratings
 	*Add feedback activity
 	*Add back button on Movie Detail	
+	
 
 
 *1.0.3
-	(Done) Add youtube trailer
-	Add new field call ignore_trailer, if it is 1 skip trailer
-	Change the play sign to be insert at the beginning of movie list => faster
+	(Done) Add youtube trailer	
+	(Done) Change the play sign to be insert at the beginning of movie list => faster	
+	(Done) Limit loading images to only 1 concurrent	
+	(Done) Should preload images that cached when get in Movie List
+	
+
+
+	Auto clean Cached data
+	Change  PLAY icon
+	Allow add feedback
+	 
+	Server-Non-playable trailer need to be replaced
+	Server-Movie with no mid need to be updated
+	
+	
 	
 *1.0.2
 

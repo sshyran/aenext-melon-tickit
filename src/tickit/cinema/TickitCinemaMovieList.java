@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 //import android.util.Log;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,19 +44,22 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
 	
 
 	libTickitCinemaMemcached 	memDB;    
-    private boolean 			mBusy = false;
+    private boolean 			mBusy 			= false;
     Thread 						background;
+    Thread 						background1;
+    Thread 						background2;
     ProgressDialog				mProgressDialog;
-    boolean						stop_thread=false;
+    boolean						stop_thread		=false;
+    int							max_concurrent	=0;
     
-    private static final int MSG_REDRAW				=0;        
+    private static final int MSG_REDRAW			=0;        
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////// handler
     Handler handler=new Handler() { 
         @Override 
         public void handleMessage(Message msg) {
         	try {
         		switch(msg.what){
-        			case MSG_REDRAW:
+        			case MSG_REDRAW:        				
         				getListView().invalidateViews();
         				break;
         			case libTickitCinemaUtilityLib.ERR_TickitCinemaUtilityLib_FailToDetermineLocation:
@@ -118,12 +122,9 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
 	    					libTickitCinemaMemcached.Movie movie=memDB.cache_movie_detail(handler, TickitCinemaMovieList.this, memDB.movies.get(pos).mid);        	    				
 	    					memDB.movies.get(pos).movie_imdb_rating	=	movie.movie_imdb_rating;
 	    					memDB.movies.get(pos).image_url			=	movie.image_url;
-	    					memDB.movies.get(pos).image_bmp			=	AenextUtilityLib.requestHTTPImageWithCached(handler,TickitCinemaMovieList.this,movie.image_url);
-	    					if (memDB.movies.get(pos).image_bmp==null){
-	    						memDB.movies.get(pos).image_bmp=BitmapFactory.decodeResource(TickitCinemaMovieList.this.getResources(), R.drawable.no_image);
-	    					}
-	    					memDB.movies.get(pos).movie_plot		=	movie.movie_plot;        	    				
-	    				
+	    					memDB.movies.get(pos).movie_plot		=	movie.movie_plot;	    					
+    						memDB.movies.get(pos).image_bmp			=	AenextUtilityLib.requestImageFromCached(handler,TickitCinemaMovieList.this,memDB.movies.get(pos).image_url);
+    						memDB.movies.get(pos).image_bmp			=	AenextUtilityLib.playable_image_marker(handler,TickitCinemaMovieList.this,memDB.movies.get(pos).image_bmp,memDB.movies.get(pos).trailer_url);
 	    					Message m = new Message();
 	    					m.what = MSG_REDRAW; 
 	    					handler.sendMessage(m);	                  
@@ -131,6 +132,34 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
     					});             	   
     					background.start();        				        				
     		}
+    		//Start request for movie images one by one in parallel
+    		/*for(int i=0;i<memDB.movies.size();i++){
+				final int pos=i;
+				if (memDB.movies.get(pos).image_bmp==null){
+					background1=new Thread(new Runnable() { 
+						public void run() {							
+							while(1==1){
+								if (max_concurrent<1){
+									max_concurrent++;      
+									memDB.movies.get(pos).image_bmp =	AenextUtilityLib.requestHTTPImageWithCached(handler,TickitCinemaMovieList.this,memDB.movies.get(pos).image_url);
+									memDB.movies.get(pos).image_bmp =	AenextUtilityLib.playable_image_marker(handler,TickitCinemaMovieList.this,memDB.movies.get(pos).image_bmp,memDB.movies.get(pos).trailer_url);
+									max_concurrent--;
+									Message m = new Message();
+									m.what = MSG_REDRAW; 
+									handler.sendMessage(m);
+									break;
+								}
+								try {
+									Thread.sleep(500);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+						} 
+					});             	   
+					background1.start();
+				}
+    		}*/
     		
     	}catch(Exception e){
     		AenextSQALib.report_error(handler, this, AenextSQALib.AERR_Application,memDB.current_location, e);
@@ -290,7 +319,7 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
         public long getItemId(int position) {return position;}
         public View getView(final int position, View convertView, ViewGroup parent) {
         	try {
-        		ViewHolder holder = new ViewHolder();            
+        		final ViewHolder holder = new ViewHolder();            
         		if (convertView == null) {
         			convertView = mInflater.inflate(R.layout.movie_list_row, null); 
         			holder.title 			= (TextView) convertView.findViewById(R.id.name);
@@ -331,23 +360,38 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
         				}        				        				
         			}
         			
-        			/////////////////////////////////////////// COVER IMAGE        			
-        			if ((memDB.movies.get(position).trailer_url!=null)&&(!memDB.movies.get(position).trailer_url.equals(""))){
-        				holder.movie_image.setOnClickListener(
-        					new Button.OnClickListener() { 
-        						public void onClick(View v) {    								
-        							startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(memDB.movies.get(position).trailer_url))); 
+        			/////////////////////////////////////////// PLAY URL        		
+        			final String trailer_url=memDB.movies.get(position).trailer_url;        			
+        			holder.movie_image.setOnClickListener(
+        				new Button.OnClickListener() { 
+        					public void onClick(View v) {
+        						if ((trailer_url!=null)&&(!trailer_url.equals(""))){
+        							startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(trailer_url))); 
         						}
         					}
-            			);
-        			}
-        			if (memDB.movies.get(position).image_bmp!=null){
-        				//holder.movie_image.setImageDrawable(new BitmapDrawable(AenextUtilityLib.playable_image_marker(handler,ctx,memDB.movies.get(position).image_bmp,memDB.movies.get(position).trailer_url)));
-        			}else{
-        				holder.movie_image.setImageDrawable(new BitmapDrawable(memDB.movies.get(position).image_bmp));
-        			}
-        			        			
-        			//Imdb rating
+        				}
+            		);
+//					///////////////////////////////////////// COVER IMAGE        			
+        			if (memDB.movies.get(position).image_bmp==null){
+        				
+    					background=new Thread(new Runnable() { 
+        					public void run() {
+    								if (max_concurrent<1){
+    									max_concurrent++;      
+    									memDB.movies.get(position).image_bmp =	AenextUtilityLib.requestHTTPImageWithCached(handler,TickitCinemaMovieList.this,memDB.movies.get(position).image_url);
+    									memDB.movies.get(position).image_bmp =	AenextUtilityLib.playable_image_marker(handler,TickitCinemaMovieList.this,memDB.movies.get(position).image_bmp,memDB.movies.get(position).trailer_url);
+    									max_concurrent--;
+    									Message m = new Message();
+    									m.what = MSG_REDRAW; 
+    									handler.sendMessage(m);    									
+    								}
+        					}
+    					});
+    					background.start();
+        			}   
+        			holder.movie_image.setImageDrawable(new BitmapDrawable(memDB.movies.get(position).image_bmp));
+        			
+        			///////////////////////////////////////// Imdb rating
         			if(memDB.movies.get(position).movie_imdb_rating==-1.0){
         				holder.imdb_rating.setRating((float) 0);
         				holder.imdb_rating_text.setText("(no ratings)");            			
@@ -355,7 +399,7 @@ public class TickitCinemaMovieList extends ListActivity implements OnScrollListe
         				holder.imdb_rating.setRating(memDB.movies.get(position).movie_imdb_rating);
         				holder.imdb_rating_text.setText(Float.toString(memDB.movies.get(position).movie_imdb_rating));
         			}
-        			//Release date
+        			/////////////////////////////////////////Release date
         			if (memDB.movies.get(position).release_date==0){
         				holder.release_date.setText("");
         			}else{            		
